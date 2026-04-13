@@ -10,6 +10,8 @@ This repository contains a Codex-native skill that helps with:
 - keeping script nodes neutral on empty or disconnected optional inputs
 - shaping `RunScript(...)` signatures so Grasshopper creates useful inputs and outputs
 - preserving practical node behaviour such as no red or orange state for idle inputs
+- verifying ambiguous RhinoCommon APIs against the locally installed `RhinoCommon.xml`
+- using a curated gotcha registry for high-risk geometry semantics
 - accumulating persistent user-specific rules in `references/custom-rules.md`
 - keeping the whole workflow inside script nodes instead of compiled `.gha` plugins
 
@@ -27,19 +29,49 @@ Strong markers include:
 
 Expected behavior:
 - detect the local Rhino environment first
-- read default and custom rules
+- read default rules, failure modes, custom rules, and gotchas
 - choose C# vs Python based on the request
 - choose Python 3 vs IronPython 2 only when compatibility requires it
+- verify ambiguous geometry APIs against local RhinoCommon docs
 - return code that is directly pasteable into the node
+
+## Reliability strategy
+
+This repo intentionally does not rely on memory alone for RhinoCommon geometry semantics.
+
+The trust hierarchy is:
+
+1. local `RhinoCommon.xml`
+2. official Rhino developer docs
+3. official McNeel sample code
+4. curated gotcha registry in this repo
+5. community forum threads
+
+This is the core design choice that makes the skill more stable on geometry-heavy tasks such as trimmed surfaces, isocurves, domains, and face orientation.
+
+## Common failure areas this skill now guards against
+
+- `Surface` vs `BrepFace` vs `Brep`
+- trim-aware behavior and underlying surfaces
+- `IsoCurve` direction semantics
+- `TrimAwareIsoCurve` returning `Curve[]`
+- `DivideByCount` returning parameters
+- face orientation and normals
+- boundary, seam, and singularity issues
+- accidental `Item` vs `List` vs `Tree` access mismatches
 
 ## What is inside
 
 - `SKILL.md`: the main Codex skill
 - `agents/openai.yaml`: Codex UI metadata
 - `references/default-rules.md`: default behaviour for Grasshopper node generation
+- `references/common-failure-modes.md`: common categories of script generation failure
 - `references/custom-rules.md`: persistent user-specific generation rules
 - `references/official-rhino-notes.md`: official-doc-derived Rhino and Grasshopper notes
+- `references/rhinocommon-gotchas.json`: machine-readable high-risk API facts and reminders
+- `scripts/check_gotcha_registry.py`: validates the gotcha registry schema
 - `scripts/detect_rhino_environment.py`: local Rhino/Grasshopper/runtime detector
+- `scripts/lookup_rhinocommon_docs.py`: local RhinoCommon XML lookup for exact API semantics
 - `scripts/update_custom_rules.py`: appends new persistent rules to the custom rules file
 - `scripts/install_skill.py`: copies the repo into a discoverable Codex skills path
 - `scripts/check_skill_md.py`: validates skill frontmatter and body presence
@@ -75,8 +107,10 @@ powershell -ExecutionPolicy Bypass -File .\scripts\run_python.ps1 .\scripts\inst
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\run_python.ps1 .\scripts\check_skill_md.py SKILL.md
+powershell -ExecutionPolicy Bypass -File .\scripts\run_python.ps1 .\scripts\check_gotcha_registry.py .\references\rhinocommon-gotchas.json
 powershell -ExecutionPolicy Bypass -File .\scripts\run_python.ps1 .\scripts\inspect_skill_repo.py .
 powershell -ExecutionPolicy Bypass -File .\scripts\run_python.ps1 .\scripts\detect_rhino_environment.py --pretty
+powershell -ExecutionPolicy Bypass -File .\scripts\run_python.ps1 .\scripts\lookup_rhinocommon_docs.py --member Surface.IsoCurve --member BrepFace.TrimAwareIsoCurve --pretty
 ```
 
 ## Environment detection workflow

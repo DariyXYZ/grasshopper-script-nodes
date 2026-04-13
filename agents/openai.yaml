@@ -1,7 +1,7 @@
 interface:
   display_name: "Grasshopper Script Nodes"
   short_description: "Write Rhino/Grasshopper C# and Python node scripts with environment detection"
-  default_prompt: "Use $grasshopper-script-nodes to detect the local Rhino/Grasshopper environment, load the default and custom rules, and write a copy-paste-ready Grasshopper node script that stays neutral on empty optional inputs."
+  default_prompt: "Use $grasshopper-script-nodes to detect the local Rhino/Grasshopper environment, load the default rules, failure modes, custom rules, and gotchas, verify ambiguous RhinoCommon geometry APIs against local docs when needed, and write a copy-paste-ready Grasshopper node script that stays neutral on empty optional inputs."
 
 policy:
   allow_implicit_invocation: true

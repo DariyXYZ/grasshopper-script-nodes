@@ -17,6 +17,19 @@ Apply these defaults unless the user explicitly overrides them.
 - For Rhino 8 C# scripts, use `C# 9.0 compatibility` as the safe baseline.
 - For Rhino 8 Python scripts, prefer `Python 3`.
 
+## Trust hierarchy
+
+When facts conflict or memory is uncertain, prefer sources in this order:
+
+1. Local `RhinoCommon.xml` from the installed Rhino version
+2. Official Rhino developer documentation
+3. Official McNeel sample code
+4. Curated gotchas in this repo
+5. Community forum posts
+6. Memory
+
+Never trust memory over the locally installed RhinoCommon documentation for ambiguous API semantics.
+
 ## Idle-safe node behaviour
 
 - Treat missing or disconnected optional inputs as a neutral idle state.
@@ -31,6 +44,8 @@ Apply these defaults unless the user explicitly overrides them.
 - Remove default `out` unless diagnostics are requested.
 - Use meaningful input and output names so Grasshopper creates useful parameters.
 - Expose tunable thresholds as inputs instead of hardcoding them.
+- Choose `Item`, `List`, or `Tree` access deliberately.
+- When one logical input may produce multiple fragments, prefer grouped output over a lossy flat list.
 
 ## C# script shape
 
@@ -56,6 +71,29 @@ Apply these defaults unless the user explicitly overrides them.
 - `Curve.DivideByCount(count, includeEnds)` should be treated as returning curve parameters, not `Point3d[]`, in the workflow this skill targets.
 - Convert returned parameters into points explicitly with `curve.PointAt(t)`.
 - For mesh topology checks, prefer `TopologyEdges` and `TopologyVertices` over raw mesh vertex indices when connectivity matters.
+
+## Geometry semantics guardrails
+
+- Distinguish `Surface`, `BrepFace`, and `Brep` before writing geometry code.
+- If the visible boundary matters, prefer `BrepFace` over `Surface`.
+- Do not assume `UnderlyingSurface()` is interchangeable with a trimmed face.
+- Treat `Surface.IsoCurve`, `BrepFace.TrimAwareIsoCurve`, `Curve.DivideByCount`, orientation APIs, and tolerance-sensitive intersection or projection methods as high-risk APIs.
+- If a method name contains direction flags, constant parameters, or overloaded return shapes, verify the exact semantics against local docs before finalizing.
+- For user requests about surface grids, rulings, isocurves, or generatrices:
+  - restate which parameter is constant
+  - decide whether boundaries are included
+  - account for trims, seams, singularities, and periodic domains when relevant
+
+## Geometry preflight checklist
+
+Before finalizing geometry-heavy code, verify:
+
+1. The runtime geometry representation matches the user-visible object.
+2. Trims, seams, singularities, and face orientation have been considered when relevant.
+3. Ambiguous API members were checked against local docs or the gotcha registry.
+4. Return types match reality: single item, array, parameters, points, or grouped tree.
+5. Boundary inclusion was chosen deliberately rather than accidentally inherited from the domain sampling loop.
+6. The node remains neutral when optional inputs are empty.
 
 ## Validation philosophy
 

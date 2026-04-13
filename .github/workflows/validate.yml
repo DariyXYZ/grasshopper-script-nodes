@@ -21,5 +21,8 @@ jobs:
       - name: Check SKILL.md
         run: python scripts/check_skill_md.py SKILL.md
 
+      - name: Check gotcha registry
+        run: python scripts/check_gotcha_registry.py references/rhinocommon-gotchas.json
+
       - name: Inspect repo structure
         run: python scripts/inspect_skill_repo.py .
