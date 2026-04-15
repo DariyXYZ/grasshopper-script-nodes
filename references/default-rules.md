@@ -46,6 +46,13 @@ Never trust memory over the locally installed RhinoCommon documentation for ambi
 - Expose tunable thresholds as inputs instead of hardcoding them.
 - Choose `Item`, `List`, or `Tree` access deliberately.
 - When one logical input may produce multiple fragments, prefer grouped output over a lossy flat list.
+- When creating a new node, assign practical default values to optional numeric and boolean inputs whenever it is safe.
+- Prefer non-zero example defaults that produce an immediate visible result as soon as the user connects geometry.
+- Do not invent geometry or placeholder model data; only prefill parameter values for quick testing.
+- When suggesting a value in the explanation, mirror that same value directly in the generated node code unless the user asks otherwise.
+- Describe the node itself and its inputs and outputs clearly enough that Grasshopper hover tooltips communicate the node logic without reading the code.
+- Prefer short natural-language parameter descriptions such as what the input means and what result it controls.
+- When an input represents a count, tolerance, toggle, or mode, make the tooltip state the practical effect, for example: `N points will be created on the input curve.`
 
 ## C# script shape
 

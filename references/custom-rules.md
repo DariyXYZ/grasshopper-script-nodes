@@ -16,4 +16,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\run_python.ps1 .\scripts\upda
 
 ## Rules
 
-No custom persistent rules recorded yet.
+- 2026-04-13 - Source: user conversation 2026-04-13
+  When creating a new Grasshopper script node, assign practical non-zero default values to numeric and toggle inputs whenever it is safe, so connecting geometry immediately produces a visible result for quick testing. Do not invent geometry; only prefill example parameter values.
+- 2026-04-13 - Source: user conversation 2026-04-13
+  When creating a new Grasshopper script node, provide clear descriptions for the node and for each input and output so the hover text explains the logic without needing to read the code. Prefer practical natural-language tooltips that describe the effect of each parameter.

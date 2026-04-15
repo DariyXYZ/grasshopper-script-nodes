@@ -88,6 +88,13 @@ When any answer is ambiguous, consult:
   - `BrepFace` over `Surface` when trims matter
   - `Brep` plus `FaceIndex` when a multi-face object is likely
   - grouped output when one logical item can split into multiple geometry fragments
+- For new nodes, prefill safe practical defaults for optional numeric and boolean inputs so the node shows a useful result as soon as geometry is connected.
+- Prefer non-zero sample values when they make the first test result visible immediately.
+- Do not fabricate geometry, placeholder points, or demo curves; only seed parameter defaults.
+- If the response recommends example values, encode those same defaults directly in the generated script instead of leaving inputs at empty or zero-only states.
+- Add clear descriptions for the node, inputs, and outputs so Grasshopper hover tooltips explain the node logic without requiring code inspection.
+- Prefer practical natural-language descriptions that state the effect of a parameter, not just its type or short name.
+- For counts, toggles, tolerances, and modes, describe what the user will get, for example: `N points will be created on the input curve.`
 
 ## C# rules
 
