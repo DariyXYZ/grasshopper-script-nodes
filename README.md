@@ -4,6 +4,8 @@ Write copy-paste-ready Rhino and Grasshopper node scripts for `C# Script`, `Pyth
 
 This repository contains a Codex-native skill for people who need practical Grasshopper node code quickly and accurately.
 
+![Validate Skill](https://github.com/DariyXYZ/grasshopper-script-nodes/actions/workflows/validate.yml/badge.svg)
+
 It helps with:
 
 - detecting the locally installed Rhino and Grasshopper version before writing code
