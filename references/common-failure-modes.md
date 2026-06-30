@@ -190,3 +190,16 @@ Before finalizing a Grasshopper script, verify:
 4. Return types match reality: single item, array, parameters, points, or grouped trees.
 5. Boundaries and tolerances were chosen deliberately.
 6. The node remains neutral when optional inputs are empty.
+
+## 9. Plane fitting return-type mismatch
+
+`Plane.FitPlaneToPoints(...)` returns `PlaneFitResult`, not `bool`.
+
+Typical symptom:
+
+- `Operator '!' cannot be applied to operand of type 'PlaneFitResult'`
+
+Prevention:
+
+- compare the result to `PlaneFitResult.Success`
+- for three known non-collinear triangle vertices, prefer `new Plane(A, B, C)` and check `plane.IsValid`

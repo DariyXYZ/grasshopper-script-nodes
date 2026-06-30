@@ -43,6 +43,16 @@
       "source_ref": "Rhino 8 System/RhinoCommon.xml members M:Rhino.Geometry.Curve.DivideByCount(System.Int32,System.Boolean) and overload with Point3d[]"
     },
     {
+      "id": "plane-fitplanetopoints-result",
+      "topic": "plane_fitting",
+      "risk": "medium",
+      "triggers": ["Plane.FitPlaneToPoints", "FitPlaneToPoints", "PlaneFitResult", "fit plane"],
+      "rule": "Plane.FitPlaneToPoints(...) returns PlaneFitResult, not bool.",
+      "implication": "Do not write `if (!Plane.FitPlaneToPoints(...))`. Compare to `PlaneFitResult.Success`, or for three known non-collinear triangle vertices use `new Plane(A, B, C)` and check `plane.IsValid`.",
+      "source_kind": "user_reported_compile_error",
+      "source_ref": "User reported Rhino 8 Grasshopper C# compile error on 2026-06-30: Operator '!' cannot be applied to operand of type 'PlaneFitResult'."
+    },
+    {
       "id": "brepface-orientation-reversed",
       "topic": "orientation",
       "risk": "medium",
